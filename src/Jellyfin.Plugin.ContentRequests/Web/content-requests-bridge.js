@@ -66,8 +66,17 @@
             link.style.display = enabled ? '' : 'none';
             const label = link.querySelector('.navMenuOptionText, .emby-button-foreground');
             if (label) label.textContent = tabName;
-            const icon = link.querySelector('.material-icons, .material-symbols-rounded');
-            if (icon) icon.textContent = 'add_home';
+            const existingIcon = link.querySelector('svg, .material-icons, .material-symbols-rounded');
+            const iconContainer = existingIcon?.parentElement;
+            if (iconContainer && iconContainer.dataset.contentRequestsIcon !== 'true') {
+                const icon = document.createElement('span');
+                icon.className = 'material-icons';
+                icon.setAttribute('aria-hidden', 'true');
+                icon.style.fontSize = '1.5rem';
+                icon.textContent = 'add_home';
+                iconContainer.replaceChildren(icon);
+                iconContainer.dataset.contentRequestsIcon = 'true';
+            }
         },
 
         async repair() {
