@@ -26,9 +26,14 @@ are served by the plugin; no database, container, or companion service is needed
 | Jellyfin server | Build target | Catalog ABI | Homepage tab |
 | --- | --- | --- | --- |
 | 10.11.11 | .NET 9 (`net9.0`) | `10.11.11.0` | CustomTabs 0.2.10 |
-| 12.0 | .NET 10 (`net10.0`) | `12.0.0.0` | When CustomTabs publishes 12.0 support |
+| 12.0 | .NET 10 (`net10.0`) | `12.0.0.0` | Untested; CustomTabs support is unconfirmed |
 
 The Content Requests plugin itself builds for both lines from the same source.
+**Jellyfin 12 support is experimental:** the project compiles successfully for
+Jellyfin 12, but it has not been tested on a running Jellyfin 12 server. It is
+also not currently known whether CustomTabs supports Jellyfin 12. Do not assume
+that the homepage tab will work there until both components have been tested.
+
 The homepage tab is provided by CustomTabs, so its own Jellyfin compatibility
 still applies. Content Requests also registers a small File Transformation
 bridge that repairs the empty-tab problem seen when CustomTabs cannot match a
