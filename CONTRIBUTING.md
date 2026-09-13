@@ -12,5 +12,10 @@ Before opening a pull request:
 - test with a Jellyfin Base URL as well as a root installation; and
 - never add a Jellyfin ABI to the manifest without testing that exact build.
 
+Create changes on a branch and open a pull request against `main`. The two
+Jellyfin build jobs must pass before merging. Do not force-push shared branches
+or include credentials, server addresses, request data, or other private
+deployment information in commits, issues, or build logs.
+
 Use four-part release tags such as `v1.2.0.0`. The release workflow packages the
 plugin and maintains the Jellyfin repository manifest.
