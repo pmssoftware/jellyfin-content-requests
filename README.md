@@ -28,7 +28,9 @@ are served by the plugin; no database, container, or companion service is needed
 
 The Content Requests plugin itself builds for both lines from the same source.
 The homepage tab is provided by CustomTabs, so its own Jellyfin compatibility
-still applies.
+still applies. Content Requests also registers a small File Transformation
+bridge that repairs the empty-tab problem seen when CustomTabs cannot match a
+newer compiled Jellyfin Web home-page bundle.
 
 ## Install from the Jellyfin catalog
 

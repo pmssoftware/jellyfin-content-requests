@@ -22,6 +22,7 @@
 
   <ItemGroup>
     <EmbeddedResource Include="Web/admin.html" />
+    <EmbeddedResource Include="Web/content-requests-bridge.js" />
     <EmbeddedResource Include="Web/request-form.html" />
   </ItemGroup>
 </Project>
