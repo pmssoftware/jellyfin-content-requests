@@ -3,9 +3,11 @@
 A deliberately small Jellyfin plugin for collecting content requests without
 Jellyseerr, Radarr, Sonarr, or another server.
 
-Users get a form with a content name, type, and optional comment. Administrators
-get a **Content Requests** entry in the Jellyfin Dashboard sidebar where every
-request can be reviewed, marked Pending/Approved/Available/Declined, or deleted.
+Users get a form with a content name, type, and optional comment, plus a private
+**My requests** list showing review status and any administrator response.
+Administrators get a **Content Requests** entry in the Jellyfin Dashboard sidebar
+where every request can be reviewed, answered, marked
+Pending/Approved/Available/Declined, or deleted.
 
 The Dashboard entry contains two sections:
 
@@ -60,6 +62,7 @@ Jellyfin URL and with a configured Base URL such as `/jellyfin`.
 
 Afterward, use **Dashboard → Content Requests → Settings** to rename the tab or
 hide it from all users. Refresh Jellyfin Web after changing these display settings.
+The same destination is also added to Jellyfin's main navigation sidebar.
 
 ## Admin request list
 

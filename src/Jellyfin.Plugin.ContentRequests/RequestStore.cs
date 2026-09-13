@@ -30,6 +30,21 @@ public sealed class RequestStore
         }
     }
 
+    public IReadOnlyList<ContentRequest> GetForUser(Guid? userId, string userName)
+    {
+        lock (_sync)
+        {
+            EnsureRequests();
+            return _plugin.Configuration.Requests
+                .Where(request => userId.HasValue && request.RequestedById == userId
+                    || !request.RequestedById.HasValue
+                        && string.Equals(request.RequestedBy, userName, StringComparison.OrdinalIgnoreCase))
+                .OrderByDescending(request => request.CreatedAtUtc)
+                .Select(request => request.Copy())
+                .ToList();
+        }
+    }
+
     public DisplaySettings GetDisplaySettings()
     {
         lock (_sync)
@@ -53,7 +68,7 @@ public sealed class RequestStore
         }
     }
 
-    public ContentRequest Add(CreateContentRequest input, string requestedBy)
+    public ContentRequest Add(CreateContentRequest input, string requestedBy, Guid? requestedById)
     {
         var request = new ContentRequest
         {
@@ -62,6 +77,7 @@ public sealed class RequestStore
             ContentType = RequestValues.CanonicalContentType(input.ContentType.Trim())!,
             Comment = input.Comment?.Trim() ?? string.Empty,
             RequestedBy = requestedBy,
+            RequestedById = requestedById,
             CreatedAtUtc = DateTime.UtcNow,
             Status = RequestValues.PendingStatus
         };
@@ -76,7 +92,7 @@ public sealed class RequestStore
         return request.Copy();
     }
 
-    public ContentRequest? SetStatus(Guid id, string status)
+    public ContentRequest? SetStatus(Guid id, string status, string response)
     {
         lock (_sync)
         {
@@ -88,6 +104,8 @@ public sealed class RequestStore
             }
 
             request.Status = status;
+            request.AdminResponse = response.Trim();
+            request.UpdatedAtUtc = DateTime.UtcNow;
             _plugin.SaveConfiguration();
             return request.Copy();
         }

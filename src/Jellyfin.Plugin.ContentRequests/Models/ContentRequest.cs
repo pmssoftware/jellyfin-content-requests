@@ -17,9 +17,15 @@ public sealed class ContentRequest
 
     public string RequestedBy { get; set; } = string.Empty;
 
+    public Guid? RequestedById { get; set; }
+
     public DateTime CreatedAtUtc { get; set; }
 
     public string Status { get; set; } = RequestValues.PendingStatus;
+
+    public string AdminResponse { get; set; } = string.Empty;
+
+    public DateTime? UpdatedAtUtc { get; set; }
 
     public ContentRequest Copy()
     {
@@ -30,8 +36,11 @@ public sealed class ContentRequest
             ContentType = ContentType,
             Comment = Comment,
             RequestedBy = RequestedBy,
+            RequestedById = RequestedById,
             CreatedAtUtc = CreatedAtUtc,
-            Status = Status
+            Status = Status,
+            AdminResponse = AdminResponse,
+            UpdatedAtUtc = UpdatedAtUtc
         };
     }
 }

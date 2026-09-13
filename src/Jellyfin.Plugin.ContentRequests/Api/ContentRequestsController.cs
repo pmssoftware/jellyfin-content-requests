@@ -3,6 +3,7 @@ using System.IO;
 using System.Net.Mime;
 using Jellyfin.Plugin.ContentRequests.Models;
 using MediaBrowser.Common.Api;
+using MediaBrowser.Controller.Library;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -16,6 +17,13 @@ namespace Jellyfin.Plugin.ContentRequests.Api;
 [Route("ContentRequests")]
 public sealed class ContentRequestsController : ControllerBase
 {
+    private readonly IUserManager _userManager;
+
+    public ContentRequestsController(IUserManager userManager)
+    {
+        _userManager = userManager;
+    }
+
     [HttpGet("Form")]
     [AllowAnonymous]
     [Produces(MediaTypeNames.Text.Html)]
@@ -101,8 +109,26 @@ public sealed class ContentRequestsController : ControllerBase
             requestedBy = "Jellyfin user";
         }
 
-        var created = plugin.Store.Add(input, requestedBy);
+        var requestedById = _userManager.GetUserByName(requestedBy)?.Id;
+        var created = plugin.Store.Add(input, requestedBy, requestedById);
         return StatusCode(StatusCodes.Status201Created, created);
+    }
+
+    [HttpGet("Mine")]
+    [Authorize]
+    [Produces(MediaTypeNames.Application.Json)]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    public ActionResult GetMine()
+    {
+        var plugin = Plugin.Instance;
+        if (plugin is null)
+        {
+            return Problem("The Content Requests plugin is not ready.", statusCode: StatusCodes.Status503ServiceUnavailable);
+        }
+
+        var userName = User.Identity?.Name ?? string.Empty;
+        var userId = _userManager.GetUserByName(userName)?.Id;
+        return Ok(plugin.Store.GetForUser(userId, userName));
     }
 
     [HttpGet]
@@ -132,7 +158,7 @@ public sealed class ContentRequestsController : ControllerBase
             return BadRequest(new { Message = "Choose a valid request status." });
         }
 
-        var updated = Plugin.Instance?.Store.SetStatus(id, status);
+        var updated = Plugin.Instance?.Store.SetStatus(id, status, input.Response ?? string.Empty);
         return updated is null ? NotFound() : Ok(updated);
     }
 

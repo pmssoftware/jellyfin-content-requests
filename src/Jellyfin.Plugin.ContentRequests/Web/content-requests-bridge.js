@@ -22,6 +22,34 @@
             });
         },
 
+        ensureSidebarLink(tabName, enabled, index) {
+            let link = document.getElementById('contentRequestsSidebarLink');
+            if (!link) {
+                const homeLink = document.querySelector('.mainDrawer a[href="#/home"], .mainDrawer a[href="#/home.html"], a.navMenuOption[href="#/home"]');
+                if (!homeLink) return;
+                link = homeLink.cloneNode(true);
+                link.id = 'contentRequestsSidebarLink';
+                link.href = '#/home';
+                link.removeAttribute('data-itemid');
+                link.addEventListener('click', event => {
+                    event.preventDefault();
+                    window.location.hash = '#/home';
+                    window.setTimeout(() => {
+                        bridge.schedule();
+                        const button = document.getElementById('customTabButton_' + index);
+                        if (button) button.click();
+                    }, 500);
+                });
+                homeLink.insertAdjacentElement('afterend', link);
+            }
+
+            link.style.display = enabled ? '' : 'none';
+            const label = link.querySelector('.navMenuOptionText, .emby-button-foreground');
+            if (label) label.textContent = tabName;
+            const icon = link.querySelector('.material-icons, .material-symbols-rounded');
+            if (icon) icon.textContent = 'add_comment';
+        },
+
         async repair() {
             if (this.running || !this.isHome() || typeof ApiClient === 'undefined') return;
             this.running = true;
@@ -42,6 +70,7 @@
                 button.style.display = enabled ? '' : 'none';
                 const label = button.querySelector('.emby-button-foreground');
                 if (label) label.textContent = tabName;
+                this.ensureSidebarLink(tabName, enabled, index);
 
                 let pane = document.getElementById(`customTab_${index}`);
                 if (!pane) {
