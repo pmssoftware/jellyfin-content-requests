@@ -4,7 +4,7 @@
     "name": "Content Requests",
     "description": "A small, self-contained content request form and administrator request list for Jellyfin.",
     "overview": "Let Jellyfin users request movies, shows, anime, documentaries, and other content.",
-    "owner": "pmssoftware",
+    "owner": "pms",
     "category": "General",
     "imageUrl": "https://raw.githubusercontent.com/pmssoftware/jellyfin-content-requests/main/artwork/plugin-banner.png",
     "versions": [

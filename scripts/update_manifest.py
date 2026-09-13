@@ -19,6 +19,7 @@ TARGET_ABIS = {
     "10.11": "10.11.11.0",
     "12.0": "12.0.0.0",
 }
+DISPLAY_OWNER = "pms"
 
 
 def md5(path: pathlib.Path) -> str:
@@ -51,7 +52,7 @@ def main() -> int:
         raise ValueError("manifest.json must contain exactly one plugin entry")
 
     plugin = manifest[0]
-    plugin["owner"] = args.repository.split("/", 1)[0]
+    plugin["owner"] = DISPLAY_OWNER
     existing = plugin.setdefault("versions", [])
     timestamp = dt.datetime.now(dt.timezone.utc).replace(microsecond=0).isoformat().replace("+00:00", "Z")
     additions = []
