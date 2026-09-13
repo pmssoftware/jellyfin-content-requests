@@ -66,7 +66,7 @@ jobs:
           archive="content-requests_${{ matrix.server }}_${{ steps.version.outputs.value }}.zip"
           (cd "$package_dir" && zip -9 -r "$GITHUB_WORKSPACE/$archive" .)
 
-      - uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@v7
         with:
           name: content-requests-${{ matrix.server }}
           path: content-requests_${{ matrix.server }}_${{ steps.version.outputs.value }}.zip
