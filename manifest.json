@@ -6,6 +6,23 @@
     "overview": "Let Jellyfin users request movies, shows, anime, documentaries, and other content.",
     "owner": "pmssoftware",
     "category": "General",
-    "versions": []
+    "versions": [
+      {
+        "version": "1.0.0.0",
+        "changelog": "See the linked GitHub release for changes.",
+        "targetAbi": "10.11.11.0",
+        "sourceUrl": "https://github.com/pmssoftware/jellyfin-content-requests/releases/download/v1.0.0.0/content-requests_10.11_1.0.0.0.zip",
+        "checksum": "8AFDA48C2887EEABF30FB8CCF607B032",
+        "timestamp": "2026-09-13T15:29:03Z"
+      },
+      {
+        "version": "1.0.0.0",
+        "changelog": "See the linked GitHub release for changes.",
+        "targetAbi": "12.0.0.0",
+        "sourceUrl": "https://github.com/pmssoftware/jellyfin-content-requests/releases/download/v1.0.0.0/content-requests_12.0_1.0.0.0.zip",
+        "checksum": "DE5433B4D411DCF7F751BEF769C0C7A3",
+        "timestamp": "2026-09-13T15:29:03Z"
+      }
+    ]
   }
 ]

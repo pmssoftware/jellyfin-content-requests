@@ -117,11 +117,13 @@ jobs:
           --artifacts dist
 
       - name: Publish manifest on the default branch
+        env:
+          DEFAULT_BRANCH: ${{ github.event.repository.default_branch }}
         shell: bash
         run: |
           cp manifest.json "$RUNNER_TEMP/manifest.json"
-          git fetch origin "$GITHUB_DEFAULT_BRANCH"
-          git checkout -B "$GITHUB_DEFAULT_BRANCH" "origin/$GITHUB_DEFAULT_BRANCH"
+          git fetch origin "$DEFAULT_BRANCH"
+          git checkout -B "$DEFAULT_BRANCH" "origin/$DEFAULT_BRANCH"
           cp "$RUNNER_TEMP/manifest.json" manifest.json
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
@@ -130,4 +132,4 @@ jobs:
             exit 0
           fi
           git commit -m "chore: publish ${GITHUB_REF_NAME} in plugin manifest"
-          git push origin "$GITHUB_DEFAULT_BRANCH"
+          git push origin "$DEFAULT_BRANCH"
