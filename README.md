@@ -119,21 +119,6 @@ dotnet build -c Release \
   -p:JellyfinPackageVersion=12.0.1
 ```
 
-## Updating for a future Jellyfin release
-
-Jellyfin plugins are ABI-specific. The intended upgrade path is:
-
-1. Add or update the target framework and Jellyfin package pin in
-   [`Directory.Build.props`](Directory.Build.props).
-2. Add the matching framework/server/SDK row in
-   [`.github/workflows/build-and-release.yml`](.github/workflows/build-and-release.yml).
-3. Update `TARGET_ABIS` in
-   [`scripts/update_manifest.py`](scripts/update_manifest.py).
-4. Build and test the form, API permissions, persistence, and Dashboard page on
-   that exact Jellyfin version.
-5. If Jellyfin changes `PluginPageInfo`, adapt only
-   [`Compatibility/PluginPageFactory.cs`](src/Jellyfin.Plugin.ContentRequests/Compatibility/PluginPageFactory.cs).
-   API-facing changes are isolated under `Api/`.
 
 Do not claim a new server line in `manifest.json` until CI builds it against the
 published Jellyfin packages and it has been exercised on that server version.
