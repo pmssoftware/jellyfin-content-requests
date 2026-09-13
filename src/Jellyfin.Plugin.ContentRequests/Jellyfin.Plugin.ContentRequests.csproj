@@ -24,5 +24,8 @@
     <EmbeddedResource Include="Web/admin.html" />
     <EmbeddedResource Include="Web/content-requests-bridge.js" />
     <EmbeddedResource Include="Web/request-form.html" />
+    <EmbeddedResource Include="../../customtabs.html"
+                      Link="Web/customtabs.html"
+                      LogicalName="Jellyfin.Plugin.ContentRequests.Web.customtabs.html" />
   </ItemGroup>
 </Project>

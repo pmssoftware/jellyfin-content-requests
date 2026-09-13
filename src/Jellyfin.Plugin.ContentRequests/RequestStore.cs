@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Jellyfin.Plugin.ContentRequests.Compatibility;
 using Jellyfin.Plugin.ContentRequests.Models;
 
 namespace Jellyfin.Plugin.ContentRequests;
@@ -64,6 +65,15 @@ public sealed class RequestStore
             _plugin.Configuration.TabEnabled = settings.TabEnabled;
             _plugin.Configuration.TabName = NormalizeTabName(settings.TabName);
             _plugin.SaveConfiguration();
+            try
+            {
+                CustomTabsIntegration.EnsureTab(_plugin.Configuration.TabName);
+            }
+            catch
+            {
+                // Display settings remain usable if CustomTabs is absent or changes its ABI.
+            }
+
             return GetDisplaySettingsUnsafe();
         }
     }

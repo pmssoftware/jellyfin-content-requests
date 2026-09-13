@@ -6,6 +6,7 @@ using MediaBrowser.Common.Configuration;
 using MediaBrowser.Common.Plugins;
 using MediaBrowser.Model.Plugins;
 using MediaBrowser.Model.Serialization;
+using Jellyfin.Plugin.ContentRequests.Services;
 
 namespace Jellyfin.Plugin.ContentRequests;
 
@@ -36,5 +37,30 @@ public sealed class Plugin : BasePlugin<PluginConfiguration>, IHasWebPages
     public IEnumerable<PluginPageInfo> GetPages()
     {
         yield return PluginPageFactory.CreateAdminPage(GetType().Namespace!);
+    }
+
+    /// <inheritdoc />
+    public override void OnUninstalling()
+    {
+        try
+        {
+            CustomTabsIntegration.RemoveTab();
+        }
+        catch
+        {
+            // CustomTabs may already have been removed or may have changed its ABI.
+        }
+
+        try
+        {
+            StartupService.RemoveTransformation();
+        }
+        catch
+        {
+            // File Transformation may already have been removed.
+        }
+
+        Instance = null;
+        base.OnUninstalling();
     }
 }

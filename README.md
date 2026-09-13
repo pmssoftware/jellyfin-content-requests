@@ -52,15 +52,16 @@ Then open the plugin catalog, install **Content Requests**, and restart Jellyfin
 The release workflow writes the real download URLs and checksums into
 `manifest.json` automatically.
 
-## Add the homepage tab
+## Homepage tab
 
-This assumes File Transformation and CustomTabs are already installed and
-working.
+File Transformation and CustomTabs must already be installed. After Content
+Requests is installed and Jellyfin restarts, the plugin automatically adds its
+own CustomTabs entry. No HTML needs to be copied manually.
 
-1. Open **Dashboard → Plugins → CustomTabs**.
-2. Add a tab named `Requests`.
-3. Copy all of [`customtabs.html`](customtabs.html) into **HTML Content**.
-4. Save, then force-refresh Jellyfin Web.
+An existing CustomTabs entry that points to `ContentRequests/Form` is reused, so
+upgrading from an earlier release does not create a duplicate. The bundled
+[`customtabs.html`](customtabs.html) file remains available as a manual fallback
+if a future CustomTabs release changes its configuration format.
 
 The iframe URL is deliberately relative. It therefore works with a normal
 Jellyfin URL and with a configured Base URL such as `/jellyfin`.
@@ -68,6 +69,11 @@ Jellyfin URL and with a configured Base URL such as `/jellyfin`.
 Afterward, use **Dashboard → Content Requests → Settings** to rename the tab or
 hide it from all users. Refresh Jellyfin Web after changing these display settings.
 The same destination is also added to Jellyfin's main navigation sidebar.
+
+When Content Requests is uninstalled, it removes its own CustomTabs entry and
+unregisters its File Transformation bridge without changing any other custom
+tabs. Jellyfin may retain the Content Requests configuration file, including
+request history, so an accidental uninstall does not silently destroy that data.
 
 ## Admin request list
 

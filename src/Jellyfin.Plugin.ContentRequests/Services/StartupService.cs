@@ -38,6 +38,23 @@ public sealed class StartupService : IScheduledTask
     {
         try
         {
+            var tabName = Plugin.Instance?.Store.GetDisplaySettings().TabName ?? "Requests";
+            if (CustomTabsIntegration.EnsureTab(tabName))
+            {
+                _logger.LogInformation("Ensured the Content Requests entry exists in CustomTabs.");
+            }
+            else
+            {
+                _logger.LogWarning("CustomTabs is unavailable; its Content Requests entry was not created.");
+            }
+        }
+        catch (Exception exception)
+        {
+            _logger.LogError(exception, "Could not create or update the Content Requests entry in CustomTabs.");
+        }
+
+        try
+        {
             var fileTransformationAssembly = AssemblyLoadContext.All
                 .SelectMany(context => context.Assemblies)
                 .FirstOrDefault(assembly => assembly.FullName?.Contains(".FileTransformation", StringComparison.Ordinal) == true);
@@ -70,6 +87,19 @@ public sealed class StartupService : IScheduledTask
         }
 
         return Task.CompletedTask;
+    }
+
+    /// <summary>
+    /// Removes the compatibility transformation when the plugin is uninstalled.
+    /// </summary>
+    public static void RemoveTransformation()
+    {
+        var fileTransformationAssembly = AssemblyLoadContext.All
+            .SelectMany(context => context.Assemblies)
+            .FirstOrDefault(assembly => assembly.FullName?.Contains(".FileTransformation", StringComparison.Ordinal) == true);
+        var pluginInterface = fileTransformationAssembly?.GetType("Jellyfin.Plugin.FileTransformation.PluginInterface");
+        pluginInterface?.GetMethod("RemoveTransformation", BindingFlags.Public | BindingFlags.Static)
+            ?.Invoke(null, new object[] { TransformationId });
     }
 
     public IEnumerable<TaskTriggerInfo> GetDefaultTriggers()
