@@ -47,7 +47,7 @@
             const label = link.querySelector('.navMenuOptionText, .emby-button-foreground');
             if (label) label.textContent = tabName;
             const icon = link.querySelector('.material-icons, .material-symbols-rounded');
-            if (icon) icon.textContent = 'add_comment';
+            if (icon) icon.textContent = 'add_home';
         },
 
         async repair() {

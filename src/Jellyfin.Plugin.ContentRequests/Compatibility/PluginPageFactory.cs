@@ -15,7 +15,7 @@ public static class PluginPageFactory
             DisplayName = "Content Requests",
             EnableInMainMenu = true,
             MenuSection = "server",
-            MenuIcon = "playlist_add",
+            MenuIcon = "add_home",
             EmbeddedResourcePath = $"{pluginNamespace}.Web.admin.html"
         };
     }
