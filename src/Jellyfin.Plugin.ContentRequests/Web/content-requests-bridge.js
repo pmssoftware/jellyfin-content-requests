@@ -22,6 +22,26 @@
             });
         },
 
+        ensureAdminIcon() {
+            const links = document.querySelectorAll(
+                'a[href*="configurationpage?name=content-requests"]'
+            );
+
+            links.forEach(link => {
+                const currentIcon = link.querySelector('svg');
+                const container = currentIcon?.parentElement;
+                if (!container || container.dataset.contentRequestsIcon === 'true') return;
+
+                const icon = document.createElement('span');
+                icon.className = 'material-icons';
+                icon.setAttribute('aria-hidden', 'true');
+                icon.style.fontSize = '1.5rem';
+                icon.textContent = 'add_home';
+                container.replaceChildren(icon);
+                container.dataset.contentRequestsIcon = 'true';
+            });
+        },
+
         ensureSidebarLink(tabName, enabled, index) {
             let link = document.getElementById('contentRequestsSidebarLink');
             if (!link) {
@@ -51,6 +71,7 @@
         },
 
         async repair() {
+            this.ensureAdminIcon();
             if (this.running || !this.isHome() || typeof ApiClient === 'undefined') return;
             this.running = true;
 
