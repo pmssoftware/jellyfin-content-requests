@@ -1,0 +1,29 @@
+<!--
+  CustomTabs title: Requests
+  Paste everything below into CustomTabs > HTML Content.
+  The relative URL preserves a Jellyfin Base URL such as /jellyfin.
+-->
+<style>
+    .contentRequestsFrame {
+        display: block;
+        width: 100%;
+        height: calc(100vh - 7.5rem);
+        min-height: 32rem;
+        border: 0;
+        background: transparent;
+    }
+
+    @media (max-width: 50rem) {
+        .contentRequestsFrame {
+            height: calc(100vh - 6rem);
+            min-height: 28rem;
+        }
+    }
+</style>
+<div class="sections">
+    <iframe
+        class="contentRequestsFrame"
+        src="../ContentRequests/Form"
+        title="Request content">
+    </iframe>
+</div>

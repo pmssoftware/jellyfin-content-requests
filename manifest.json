@@ -1,0 +1,11 @@
+[
+  {
+    "guid": "3ea3f97e-9af0-4f02-aa9d-3a4b61ef5551",
+    "name": "Content Requests",
+    "description": "A small, self-contained content request form and administrator request list for Jellyfin.",
+    "overview": "Let Jellyfin users request movies, shows, anime, documentaries, and other content.",
+    "owner": "pmssoftware",
+    "category": "General",
+    "versions": []
+  }
+]

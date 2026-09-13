@@ -1,0 +1,10 @@
+bin/
+obj/
+.vs/
+.vscode/
+*.user
+*.suo
+*.zip
+dist/
+__pycache__/
+*.py[cod]

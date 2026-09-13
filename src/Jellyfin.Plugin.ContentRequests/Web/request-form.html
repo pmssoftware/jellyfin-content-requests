@@ -1,0 +1,310 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Request content</title>
+    <style>
+        :root {
+            color-scheme: dark;
+            --cr-text: #f4f4f4;
+            --cr-muted: #b9b9b9;
+            --cr-surface: rgba(24, 24, 24, .9);
+            --cr-field: rgba(0, 0, 0, .34);
+            --cr-border: rgba(255, 255, 255, .16);
+            --cr-accent: #00a4dc;
+            --cr-success: #59c589;
+            --cr-error: #ff7b7b;
+        }
+
+        * { box-sizing: border-box; }
+
+        html, body { min-height: 100%; }
+
+        body {
+            margin: 0;
+            padding: clamp(1rem, 3vw, 3rem);
+            background: transparent;
+            color: var(--cr-text);
+            font: 16px/1.5 system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+        }
+
+        .request-card {
+            width: min(42rem, 100%);
+            margin: 0 auto;
+            padding: clamp(1.25rem, 4vw, 2.5rem);
+            border: 1px solid var(--cr-border);
+            border-radius: 1rem;
+            background: var(--cr-surface);
+            box-shadow: 0 1rem 3rem rgba(0, 0, 0, .25);
+            backdrop-filter: blur(14px);
+        }
+
+        h1 { margin: 0; font-size: clamp(1.65rem, 4vw, 2.25rem); }
+        .intro { margin: .45rem 0 1.75rem; color: var(--cr-muted); }
+        .field { margin: 0 0 1.15rem; }
+
+        label {
+            display: block;
+            margin-bottom: .4rem;
+            font-weight: 650;
+        }
+
+        input, select, textarea {
+            display: block;
+            width: 100%;
+            border: 1px solid var(--cr-border);
+            border-radius: .45rem;
+            background: var(--cr-field);
+            color: var(--cr-text);
+            padding: .8rem .9rem;
+            font: inherit;
+            outline: none;
+        }
+
+        input:focus, select:focus, textarea:focus {
+            border-color: var(--cr-accent);
+            box-shadow: 0 0 0 3px color-mix(in srgb, var(--cr-accent) 28%, transparent);
+        }
+
+        textarea { min-height: 8rem; resize: vertical; }
+        .optional { color: var(--cr-muted); font-size: .87em; font-weight: 400; }
+
+        button {
+            width: 100%;
+            min-height: 3rem;
+            border: 0;
+            border-radius: .45rem;
+            background: var(--cr-accent);
+            color: #fff;
+            padding: .75rem 1rem;
+            font: inherit;
+            font-weight: 700;
+            cursor: pointer;
+        }
+
+        button:hover { filter: brightness(1.08); }
+        button:disabled { cursor: wait; opacity: .65; }
+
+        .message {
+            display: none;
+            margin-top: 1rem;
+            padding: .8rem 1rem;
+            border-radius: .45rem;
+            background: rgba(255, 255, 255, .08);
+        }
+
+        .message.visible { display: block; }
+        .message.success { color: var(--cr-success); }
+        .message.error { color: var(--cr-error); }
+    </style>
+</head>
+<body>
+    <main class="request-card">
+        <h1 id="pageTitle">Request content</h1>
+        <p id="pageIntro" class="intro">Tell us what you would like to see added to Jellyfin.</p>
+
+        <form id="requestForm">
+            <div class="field">
+                <label id="nameLabel" for="title">Name</label>
+                <input id="title" name="title" type="text" maxlength="200" autocomplete="off" required>
+            </div>
+
+            <div class="field">
+                <label id="typeLabel" for="contentType">Type</label>
+                <select id="contentType" name="contentType" required>
+                    <option value="Movie" data-label="movie">Movie</option>
+                    <option value="TV Show" data-label="tvShow">TV show</option>
+                    <option value="Anime" data-label="anime">Anime</option>
+                    <option value="Documentary" data-label="documentary">Documentary</option>
+                    <option value="Other" data-label="other">Other</option>
+                </select>
+            </div>
+
+            <div class="field">
+                <label for="comment"><span id="commentLabel">Comment</span> <span id="optionalLabel" class="optional">(optional)</span></label>
+                <textarea id="comment" name="comment" maxlength="1000" placeholder="Year, edition, language, or anything else that helps"></textarea>
+            </div>
+
+            <button id="submitButton" type="submit">Send request</button>
+            <div id="message" class="message" role="status" aria-live="polite"></div>
+        </form>
+    </main>
+
+    <script>
+        (() => {
+            const form = document.querySelector('#requestForm');
+            const button = document.querySelector('#submitButton');
+            const message = document.querySelector('#message');
+            const translations = {
+                en: {
+                    pageTitle: 'Request content',
+                    pageIntro: 'Tell us what you would like to see added to Jellyfin.',
+                    name: 'Name', type: 'Type', comment: 'Comment', optional: '(optional)',
+                    movie: 'Movie', tvShow: 'TV show', anime: 'Anime', documentary: 'Documentary', other: 'Other',
+                    placeholder: 'Year, edition, language, or anything else that helps',
+                    send: 'Send request', sending: 'Sending…',
+                    sent: 'Request sent. Thank you!',
+                    session: 'Your Jellyfin session could not be found. Refresh the page and sign in again.',
+                    failed: 'The request could not be sent. Please try again.'
+                },
+                de: {
+                    pageTitle: 'Inhalt anfragen',
+                    pageIntro: 'Teile uns mit, was du gerne in Jellyfin sehen möchtest.',
+                    name: 'Name', type: 'Typ', comment: 'Kommentar', optional: '(optional)',
+                    movie: 'Film', tvShow: 'Serie', anime: 'Anime', documentary: 'Dokumentation', other: 'Sonstiges',
+                    placeholder: 'Jahr, Fassung, Sprache oder andere hilfreiche Angaben',
+                    send: 'Anfrage senden', sending: 'Wird gesendet…',
+                    sent: 'Anfrage wurde gesendet. Vielen Dank!',
+                    session: 'Deine Jellyfin-Sitzung wurde nicht gefunden. Lade die Seite neu und melde dich erneut an.',
+                    failed: 'Die Anfrage konnte nicht gesendet werden. Bitte versuche es erneut.'
+                }
+            };
+
+            function selectedLanguage() {
+                const candidates = [];
+                try {
+                    candidates.push(window.parent.document.documentElement.lang);
+                    candidates.push(window.parent.localStorage.getItem('language'));
+                } catch (_) {
+                    // Browser language remains as a safe fallback.
+                }
+                candidates.push(navigator.language);
+                return candidates.some(candidate => String(candidate || '').toLowerCase().startsWith('de')) ? 'de' : 'en';
+            }
+
+            const language = selectedLanguage();
+            const text = translations[language];
+
+            function applyTranslations() {
+                document.documentElement.lang = language;
+                document.title = text.pageTitle;
+                document.querySelector('#pageTitle').textContent = text.pageTitle;
+                document.querySelector('#pageIntro').textContent = text.pageIntro;
+                document.querySelector('#nameLabel').textContent = text.name;
+                document.querySelector('#typeLabel').textContent = text.type;
+                document.querySelector('#commentLabel').textContent = text.comment;
+                document.querySelector('#optionalLabel').textContent = text.optional;
+                document.querySelector('#comment').placeholder = text.placeholder;
+                document.querySelectorAll('#contentType option').forEach(option => {
+                    option.textContent = text[option.dataset.label];
+                });
+                button.textContent = text.send;
+            }
+
+            function jellyfinClient() {
+                try {
+                    return window.parent && window.parent.ApiClient
+                        ? window.parent.ApiClient
+                        : window.ApiClient;
+                } catch (_) {
+                    return window.ApiClient;
+                }
+            }
+
+            function showMessage(text, kind) {
+                message.textContent = text;
+                message.className = `message visible ${kind}`;
+            }
+
+            async function synchronizeCustomTab() {
+                const client = jellyfinClient();
+                if (!client || typeof client.ajax !== 'function') return;
+
+                try {
+                    const response = await client.ajax({
+                        url: client.getUrl('ContentRequests/DisplaySettings'),
+                        type: 'GET',
+                        headers: { 'Accept': 'application/json' }
+                    });
+                    const settings = await response.json();
+                    const enabled = settings.TabEnabled ?? settings.tabEnabled ?? true;
+                    const tabName = settings.TabName ?? settings.tabName ?? 'Requests';
+                    const frame = window.frameElement;
+                    const tab = frame && frame.closest('[id^="customTab_"]');
+                    if (!tab) return;
+
+                    const suffix = tab.id.substring('customTab_'.length);
+                    const parentDocument = window.parent.document;
+                    const apply = () => {
+                        const tabButton = parentDocument.querySelector(`#customTabButton_${suffix}`);
+                        if (!tabButton) return false;
+                        tabButton.style.display = enabled ? '' : 'none';
+                        const label = tabButton.querySelector('.emby-button-foreground');
+                        if (label) label.textContent = tabName;
+                        return true;
+                    };
+
+                    if (!apply()) {
+                        let attempts = 0;
+                        const timer = window.setInterval(() => {
+                            attempts += 1;
+                            if (apply() || attempts >= 25) window.clearInterval(timer);
+                        }, 200);
+                    }
+                } catch (error) {
+                    console.warn('Content Requests: could not synchronize CustomTabs settings', error);
+                }
+            }
+
+            async function readError(error) {
+                try {
+                    if (error && typeof error.json === 'function') {
+                        const body = await error.json();
+                        return body.Message || body.message || body.detail;
+                    }
+                } catch (_) {
+                    // Fall through to the friendly generic message.
+                }
+
+                return null;
+            }
+
+            form.addEventListener('submit', async event => {
+                event.preventDefault();
+                message.className = 'message';
+
+                const client = jellyfinClient();
+                if (!client || typeof client.ajax !== 'function') {
+                    showMessage(text.session, 'error');
+                    return;
+                }
+
+                const payload = {
+                    Title: form.elements.title.value.trim(),
+                    ContentType: form.elements.contentType.value,
+                    Comment: form.elements.comment.value.trim()
+                };
+
+                button.disabled = true;
+                button.textContent = text.sending;
+
+                try {
+                    await client.ajax({
+                        url: client.getUrl('ContentRequests'),
+                        type: 'POST',
+                        data: JSON.stringify(payload),
+                        headers: {
+                            'Accept': 'application/json',
+                            'Content-Type': 'application/json'
+                        }
+                    });
+
+                    form.reset();
+                    showMessage(text.sent, 'success');
+                    form.elements.title.focus();
+                } catch (error) {
+                    const detail = await readError(error);
+                    showMessage(detail || text.failed, 'error');
+                } finally {
+                    button.disabled = false;
+                    button.textContent = text.send;
+                }
+            });
+
+            applyTranslations();
+            synchronizeCustomTab();
+        })();
+    </script>
+</body>
+</html>
