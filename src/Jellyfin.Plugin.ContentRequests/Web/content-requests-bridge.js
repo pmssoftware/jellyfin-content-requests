@@ -22,6 +22,16 @@
             });
         },
 
+        normalizePaneOrder(favorites) {
+            const panes = Array.from(document.querySelectorAll('[id^="customTab_"]'))
+                .sort((left, right) => Number(left.id.slice(10)) - Number(right.id.slice(10)));
+            let anchor = favorites;
+            panes.forEach(pane => {
+                if (anchor.nextElementSibling !== pane) anchor.insertAdjacentElement('afterend', pane);
+                anchor = pane;
+            });
+        },
+
         ensureAdminIcon() {
             const links = document.querySelectorAll(
                 'a[href*="configurationpage?name=content-requests"]'
@@ -127,6 +137,7 @@
                     pane.replaceChildren(iframe);
                     console.info('Content Requests: repaired its CustomTabs content pane.');
                 }
+                this.normalizePaneOrder(favorites);
                 pane.style.display = enabled ? '' : 'none';
             } catch (error) {
                 console.debug('Content Requests: homepage-tab bridge is waiting for CustomTabs.', error);
