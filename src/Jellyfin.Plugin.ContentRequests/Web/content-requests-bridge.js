@@ -74,8 +74,15 @@
                 icon.setAttribute('aria-hidden', 'true');
                 icon.style.fontSize = '1.5rem';
                 icon.textContent = 'add_home';
-                iconContainer.replaceChildren(icon);
-                iconContainer.dataset.contentRequestsIcon = 'true';
+                if (iconContainer === link || (label && iconContainer.contains(label))) {
+                    link.querySelectorAll('svg, .material-icons, .material-symbols-rounded')
+                        .forEach(candidate => candidate.remove());
+                    label ? link.insertBefore(icon, label) : link.prepend(icon);
+                    link.dataset.contentRequestsIcon = 'true';
+                } else {
+                    iconContainer.replaceChildren(icon);
+                    iconContainer.dataset.contentRequestsIcon = 'true';
+                }
             }
         },
 
