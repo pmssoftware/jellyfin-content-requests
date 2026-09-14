@@ -82,7 +82,7 @@
                 const icon = document.createElement('span');
                 icon.className = 'material-icons';
                 icon.setAttribute('aria-hidden', 'true');
-                icon.style.fontSize = '1.5rem';
+                icon.style.cssText = 'display:inline-flex;align-items:center;justify-content:center;width:1.5rem;flex:0 0 1.5rem;margin-right:1.2rem;font-size:1.5rem';
                 icon.textContent = 'add_home';
                 if (iconContainer === link || (label && iconContainer.contains(label))) {
                     link.querySelectorAll('svg, .material-icons, .material-symbols-rounded')
