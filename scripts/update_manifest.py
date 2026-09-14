@@ -53,7 +53,6 @@ def main() -> int:
 
     plugin = manifest[0]
     plugin["owner"] = DISPLAY_OWNER
-    existing = plugin.setdefault("versions", [])
     timestamp = dt.datetime.now(dt.timezone.utc).replace(microsecond=0).isoformat().replace("+00:00", "Z")
     additions = []
 
@@ -80,10 +79,9 @@ def main() -> int:
         found = ", ".join(item["targetAbi"] for item in additions) or "none"
         raise FileNotFoundError(f"Expected one artifact per server line; found: {found}")
 
-    replaced = {(item["version"], item["targetAbi"]) for item in additions}
-    plugin["versions"] = additions + [
-        item for item in existing if (item.get("version"), item.get("targetAbi")) not in replaced
-    ]
+    # Publish only the current release. Keeping older entries makes Jellyfin
+    # display and offer obsolete plugin versions in the catalog.
+    plugin["versions"] = additions
     args.manifest.write_text(json.dumps(manifest, indent=2) + "\n", encoding="utf-8")
     return 0
 
