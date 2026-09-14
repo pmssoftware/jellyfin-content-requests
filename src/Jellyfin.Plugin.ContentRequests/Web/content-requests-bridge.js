@@ -115,14 +115,17 @@
                     pane.id = `customTab_${index}`;
                     pane.className = 'tabContent pageTabContent';
                     pane.dataset.index = String(index + 2);
+                    favorites.insertAdjacentElement('afterend', pane);
+                }
 
-                    const iframe = document.createElement('iframe');
+                let iframe = pane.querySelector('iframe');
+                if (!iframe || !String(iframe.getAttribute('src') || '').includes('ContentRequests/Form')) {
+                    iframe = document.createElement('iframe');
                     iframe.title = tabName;
                     iframe.src = ApiClient.getUrl('ContentRequests/Form');
                     iframe.style.cssText = 'display:block;width:100%;height:calc(100vh - 7.5rem);min-height:32rem;border:0;background:transparent';
-                    pane.appendChild(iframe);
-                    favorites.insertAdjacentElement('afterend', pane);
-                    console.info('Content Requests: repaired missing CustomTabs content pane.');
+                    pane.replaceChildren(iframe);
+                    console.info('Content Requests: repaired its CustomTabs content pane.');
                 }
                 pane.style.display = enabled ? '' : 'none';
             } catch (error) {
