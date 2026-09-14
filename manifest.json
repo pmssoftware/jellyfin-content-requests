@@ -9,20 +9,20 @@
     "imageUrl": "https://raw.githubusercontent.com/pmssoftware/jellyfin-content-requests/main/artwork/plugin-banner.png",
     "versions": [
       {
-        "version": "1.2.0.3",
+        "version": "1.2.0.4",
         "changelog": "See the linked GitHub release for changes.",
         "targetAbi": "10.11.11.0",
-        "sourceUrl": "https://github.com/pmssoftware/jellyfin-content-requests/releases/download/v1.2.0.3/content-requests_10.11_1.2.0.3.zip",
-        "checksum": "56DAFE2AA1641A380200D0CB8291B0B7",
-        "timestamp": "2026-09-14T00:03:58Z"
+        "sourceUrl": "https://github.com/pmssoftware/jellyfin-content-requests/releases/download/v1.2.0.4/content-requests_10.11_1.2.0.4.zip",
+        "checksum": "6E46A027F5198029B405BA30852273A3",
+        "timestamp": "2026-09-14T04:43:07Z"
       },
       {
-        "version": "1.2.0.3",
+        "version": "1.2.0.4",
         "changelog": "See the linked GitHub release for changes.",
         "targetAbi": "12.0.0.0",
-        "sourceUrl": "https://github.com/pmssoftware/jellyfin-content-requests/releases/download/v1.2.0.3/content-requests_12.0_1.2.0.3.zip",
-        "checksum": "A1818D0F58C41C0450918D5C1DEED0A4",
-        "timestamp": "2026-09-14T00:03:58Z"
+        "sourceUrl": "https://github.com/pmssoftware/jellyfin-content-requests/releases/download/v1.2.0.4/content-requests_12.0_1.2.0.4.zip",
+        "checksum": "322A35C166709EED324FA7A3341E61BE",
+        "timestamp": "2026-09-14T04:43:07Z"
       }
     ]
   }
